@@ -119,8 +119,8 @@ public class NormalizingGroovyCompiler implements Compiler<GroovyJavaJointCompil
     private WorkResult delegateAndHandleErrors(GroovyJavaJointCompileSpec spec) {
         try {
             return delegate.execute(spec);
-        } catch (CompilationFailedException e) {
-            if (spec.getCompileOptions().isFailOnError()) {
+        } catch (RuntimeException e) {
+            if (spec.getCompileOptions().isFailOnError() || !CompilationFailedException.hasCompilationFailedCause(e)) {
                 throw e;
             }
             LOGGER.debug("Ignoring compilation failure.");

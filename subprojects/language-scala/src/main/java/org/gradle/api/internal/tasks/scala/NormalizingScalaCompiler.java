@@ -99,8 +99,8 @@ public class NormalizingScalaCompiler implements Compiler<ScalaJavaJointCompileS
     private WorkResult delegateAndHandleErrors(ScalaJavaJointCompileSpec spec) {
         try {
             return delegate.execute(spec);
-        } catch (CompilationFailedException e) {
-            if (spec.getScalaCompileOptions().isFailOnError()) {
+        } catch (RuntimeException e) {
+            if (spec.getCompileOptions().isFailOnError() || !CompilationFailedException.hasCompilationFailedCause(e)) {
                 throw e;
             }
             LOGGER.debug("Ignoring compilation failure.");
